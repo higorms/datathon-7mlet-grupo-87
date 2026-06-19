@@ -14,9 +14,34 @@ __pycache__/
 .idea/
 
 # Dados locais
-data/
+# Regra geral: ignorar dados brutos/pesados...
 *.csv
 *.parquet
+
+# ...e ignorar o conteúdo de data/ por padrão (usamos data/* e não data/ para
+# permitir reincluir subpastas específicas abaixo — o Git não consegue reincluir
+# um arquivo se a pasta-pai inteira estiver ignorada).
+data/*
+
+# --- Exceções: artefatos que o enunciado EXIGE versionar ---
+
+# Documentação da base Kaggle (fonte, link, versão, licença). O dado bruto em si
+# (data/kaggle/raw/) continua FORA do versionamento — baixado via script.
+!data/kaggle/
+data/kaggle/*
+!data/kaggle/README.md
+
+# Base tratada/derivada sem vazamento
+!data/processed/
+!data/processed/**
+
+# Camada sintética de experimentação (offer_catalog, offer_events, delayed_rewards)
+!data/synthetic_enrichment/
+!data/synthetic_enrichment/**
+
+# Golden set de avaliação (>= 20 casos)
+!data/golden_set/
+!data/golden_set/**
 
 # Logs
 *.log
