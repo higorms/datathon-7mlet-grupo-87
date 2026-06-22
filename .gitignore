@@ -1,6 +1,12 @@
 # Ambiente virtual
 venv/
+.venv/
 .env
+
+# Caches de ferramentas
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # Cache Python
 __pycache__/

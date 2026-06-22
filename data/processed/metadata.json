@@ -1,0 +1,107 @@
+{
+  "provenance": {
+    "dataset_name": "Bank Marketing (bank-additional-full)",
+    "kaggle_slug": "henriqueyamahata/bank-marketing",
+    "kaggle_url": "https://www.kaggle.com/datasets/henriqueyamahata/bank-marketing",
+    "uci_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+    "version": "UCI 2014-02-13 (Moro et al., 2014)",
+    "license": "CC BY 4.0 (UCI Machine Learning Repository)",
+    "citation": "Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306",
+    "raw_filename": "bank-additional-full.csv",
+    "raw_sha256": "74adfc578bf77a7ff4bb1ba4a9f8709d9e3c6907342959c2c8416847e0afb4d8",
+    "n_rows": 41188,
+    "n_cols": 21,
+    "columns": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "contact",
+      "month",
+      "day_of_week",
+      "duration",
+      "campaign",
+      "pdays",
+      "previous",
+      "poutcome",
+      "emp.var.rate",
+      "cons.price.idx",
+      "cons.conf.idx",
+      "euribor3m",
+      "nr.employed",
+      "y"
+    ]
+  },
+  "process": {
+    "generated_at_utc": "2026-06-19T18:49:19+00:00",
+    "n_rows_raw": 41188,
+    "n_rows_processed": 39404,
+    "n_duplicates_removed": 1784,
+    "n_cols_processed": 20,
+    "renamed_columns": {
+      "emp.var.rate": "emp_var_rate",
+      "cons.price.idx": "cons_price_idx",
+      "cons.conf.idx": "cons_conf_idx",
+      "nr.employed": "nr_employed"
+    },
+    "leakage_columns_dropped": [
+      "duration"
+    ],
+    "leakage_decisions": [
+      {
+        "column": "duration",
+        "decision": "descartar",
+        "rationale": "Duracao em segundos do ultimo contato. So e conhecida APOS a ligacao terminar e, nesse ponto, o resultado y ja e conhecido (duration=0 => y='no'). A propria UCI orienta descartar a coluna para um modelo preditivo realista. Mante-la causaria vazamento pos-contato e infla artificialmente a metrica."
+      },
+      {
+        "column": "campaign",
+        "decision": "manter",
+        "rationale": "Numero de contatos nesta campanha para o cliente (inclui o ultimo). E uma informacao de intensidade de contato conhecida no momento da decisao do proximo passo; nao revela o resultado. Mantida como contexto."
+      },
+      {
+        "column": "pdays",
+        "decision": "manter",
+        "rationale": "Dias desde o ultimo contato de uma campanha anterior (999 = nunca contatado). Refere-se ao passado do cliente, conhecido antes da decisao. Mantida; o sentinela 999 e documentado no dicionario de dados."
+      },
+      {
+        "column": "previous",
+        "decision": "manter",
+        "rationale": "Numero de contatos antes desta campanha. Historico do cliente, conhecido antes da decisao. Mantida como contexto."
+      },
+      {
+        "column": "poutcome",
+        "decision": "manter",
+        "rationale": "Resultado da campanha de marketing ANTERIOR (nao a atual). Historico conhecido antes da decisao. Mantida como contexto."
+      }
+    ],
+    "target_column": "subscribed",
+    "target_encoding": {
+      "yes": 1,
+      "no": 0
+    },
+    "feature_columns": [
+      "age",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "contact",
+      "month",
+      "day_of_week",
+      "campaign",
+      "pdays",
+      "previous",
+      "poutcome",
+      "emp_var_rate",
+      "cons_price_idx",
+      "cons_conf_idx",
+      "euribor3m",
+      "nr_employed"
+    ]
+  }
+}
