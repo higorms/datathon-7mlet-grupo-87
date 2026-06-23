@@ -39,11 +39,9 @@ data/kaggle/*
 
 # Base tratada/derivada sem vazamento
 !data/processed/
-!data/processed/**
 
 # Camada sintética de experimentação (offer_catalog, offer_events, delayed_rewards)
 !data/synthetic_enrichment/
-!data/synthetic_enrichment/**
 
 # Golden set de avaliação (>= 20 casos)
 !data/golden_set/
@@ -51,6 +49,9 @@ data/kaggle/*
 
 # Logs
 *.log
+
+# Figuras
+*.png
 
 # Modelos treinados
 models/*.pkl
