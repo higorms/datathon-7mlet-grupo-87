@@ -38,14 +38,19 @@ datathon-7mlet-grupo-87/
 │       ├── bank_marketing.parquet  # base tratada, sem vazamento (versionada)
 │       └── metadata.json           # proveniência + resumo do processamento
 ├── notebooks/
-│   └── 01_eda.ipynb             # EDA executada (outputs e figuras embarcados)
+│   ├── 01_eda.ipynb             # EDA executada (Etapa 1)
+│   ├── 02_enriquecimento_sintetico.ipynb  # camada sintética (Etapa 2)
+│   └── 03_baseline_bandit.ipynb # baseline x bandit (Etapa 3)
 ├── reports/
 │   ├── data-dictionary.md       # dicionário de dados
 │   ├── data-quality.md          # relatório de qualidade (gerado)
-│   └── figures/                 # figuras da EDA
+│   ├── bandit-comparison.md     # comparação baseline x bandit (gerado)
+│   ├── bandit-metrics.json      # métricas do experimento (gerado)
+│   └── figures/                 # figuras da EDA e do bandit
 ├── src/
-│   └── data/                    # camada de dados (download, load, processamento, qualidade)
-├── tests/                       # testes de validação da camada de dados
+│   ├── data/                    # camada de dados (download, load, processamento, qualidade)
+│   └── bandits/                 # políticas, ambiente, simulação e experimento (Etapa 3)
+├── tests/                       # testes de validação (camada de dados e bandits)
 ├── PLANEJAMENTO.md              # plano das 9 etapas (0–8)
 ├── pyproject.toml               # dependências e configuração (Poetry)
 └── .env.example                 # variáveis de ambiente (credencial Kaggle opcional)
@@ -66,10 +71,13 @@ cp .env.example .env
 # 3. Pipeline da Etapa 1 ponta a ponta (download -> processado -> relatório de qualidade)
 poetry run python -m src.data.prepare
 
-# 4. (Opcional) reexecutar a EDA
+# 4. Experimento da Etapa 3 (baseline x bandit -> relatório + figuras)
+poetry run python -m src.bandits.experiment
+
+# 5. (Opcional) reexecutar os notebooks
 poetry run jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb
 
-# 5. Testes de validação
+# 6. Testes de validação
 poetry run pytest -q
 ```
 
@@ -81,7 +89,8 @@ poetry run pytest -q
 | `poetry run python -m src.data.prepare` | **Comando único** da Etapa 1: baixa, processa e gera o relatório. |
 | `poetry run python -m src.data.download [--source uci\|kaggle] [--force]` | Só baixa a base bruta. |
 | `poetry run python -m src.data.build_processed` | Gera `data/processed/` sem vazamento. |
-| `poetry run pytest -q` | Roda os testes de validação da camada de dados. |
+| `poetry run python -m src.bandits.experiment [--horizon N --seeds N]` | **Etapa 3:** compara baseline x bandit e gera relatório/figuras. |
+| `poetry run pytest -q` | Roda os testes de validação (dados e bandits). |
 | `poetry run ruff check src/` | Lint do código-fonte. |
 
 ## Etapas do projeto
@@ -95,7 +104,15 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Relatório de qualidade: [`reports/data-quality.md`](reports/data-quality.md)
   - EDA: [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb)
   - Camada de dados: [`src/data/`](src/data/)
-- **Etapas 2–8** — planejadas (ver `PLANEJAMENTO.md`).
+- **Etapa 2 — Enriquecimento sintético** ✅
+  - Documentação/schema: [`data/synthetic_enrichment/README.md`](data/synthetic_enrichment/README.md)
+  - Notebook gerador: [`notebooks/02_enriquecimento_sintetico.ipynb`](notebooks/02_enriquecimento_sintetico.ipynb)
+  - Artefatos: `offer_catalog`, `offer_events`, `delayed_rewards` (parquet)
+- **Etapa 3 — Baseline e estratégia algorítmica** ✅
+  - Comparação (gerada): [`reports/bandit-comparison.md`](reports/bandit-comparison.md)
+  - Notebook: [`notebooks/03_baseline_bandit.ipynb`](notebooks/03_baseline_bandit.ipynb)
+  - Código (políticas/ambiente/simulação): [`src/bandits/`](src/bandits/)
+- **Etapas 4–8** — planejadas (ver `PLANEJAMENTO.md`).
 
 ## Limitações conhecidas
 
