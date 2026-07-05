@@ -1,0 +1,59 @@
+{
+  "generated_at_utc": "2026-06-25T16:41:36+00:00",
+  "horizon": 20000,
+  "seeds": 30,
+  "mean_delay": 500.0,
+  "min_rate": 0.04,
+  "max_rate": 0.18,
+  "environment": {
+    "arm_ids": [
+      "arm_consultative_call",
+      "arm_control",
+      "arm_digital_bundle",
+      "arm_rate_boost",
+      "arm_retention_plus"
+    ],
+    "true_p": [
+      0.145,
+      0.04,
+      0.10999999999999999,
+      0.18,
+      0.075
+    ],
+    "best_arm": "arm_rate_boost"
+  },
+  "results": [
+    {
+      "policy": "Baseline fixo (controle)",
+      "final_regret_mean": 2799.9999999999604,
+      "final_regret_std": 4.547473508864641e-13,
+      "conversion_rate": 0.04026833333333334,
+      "exploration_rate": 0.0,
+      "optimal_arm_rate": 0.0
+    },
+    {
+      "policy": "Epsilon-greedy (eps=0.1)",
+      "final_regret_mean": 208.6116666666617,
+      "final_regret_std": 84.17224862678889,
+      "conversion_rate": 0.16911500000000002,
+      "exploration_rate": 0.08021000000000002,
+      "optimal_arm_rate": 0.8232400000000001
+    },
+    {
+      "policy": "UCB1 (Nilos-UCB)",
+      "final_regret_mean": 432.441333333364,
+      "final_regret_std": 36.856723627530016,
+      "conversion_rate": 0.15806166666666666,
+      "exploration_rate": 0.34530833333333344,
+      "optimal_arm_rate": 0.6527483333333334
+    },
+    {
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 66.96199999999826,
+      "final_regret_std": 19.688233482631542,
+      "conversion_rate": 0.17670666666666665,
+      "exploration_rate": 0.05398666666666666,
+      "optimal_arm_rate": 0.9400583333333334
+    }
+  ]
+}

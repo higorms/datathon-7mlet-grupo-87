@@ -11,8 +11,8 @@
 
 | Integrante | Conta GitHub | Status |
 |------------|--------------|--------|
-| Higor Menezes | `higorms` | Etapa 0 ✅ concluída |
-| Narcélio | `narcelio1989` (`nfilho1989`) | Etapa 1 🔜 em andamento |
+| Higor Menezes | `higorms` | Etapas 0 e 2 ✅ concluídas |
+| Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1 e 3 ✅ concluídas |
 
 **Critério de avaliação oficial (Fase 05):**
 
