@@ -1,0 +1,172 @@
+{
+  "generated_at_utc": "2026-07-05T23:42:00+00:00",
+  "horizon": 10000,
+  "seeds": 15,
+  "golden_set": {
+    "n_cases": 24,
+    "pass_rate": 1.0,
+    "pass_rate_by_category": {
+      "adversarial": 1.0,
+      "edge": 1.0,
+      "segment": 1.0,
+      "typical": 1.0
+    },
+    "failures": []
+  },
+  "bandit_matrix": [
+    {
+      "policy": "Baseline fixo (controle)",
+      "final_regret_mean": 1400.000000000182,
+      "conversion_rate": 0.040293333333333334,
+      "exploration_rate": 0.0,
+      "optimal_arm_rate": 0.0
+    },
+    {
+      "policy": "Epsilon-greedy (eps=0.1)",
+      "final_regret_mean": 147.65099999999822,
+      "conversion_rate": 0.16446,
+      "exploration_rate": 0.08024666666666666,
+      "optimal_arm_rate": 0.7014400000000001
+    },
+    {
+      "policy": "UCB1 (Nilos-UCB)",
+      "final_regret_mean": 293.88333333332764,
+      "conversion_rate": 0.15144000000000002,
+      "exploration_rate": 0.4463466666666666,
+      "optimal_arm_rate": 0.54956
+    },
+    {
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 56.5669999999989,
+      "conversion_rate": 0.1738333333333333,
+      "exploration_rate": 0.09031333333333331,
+      "optimal_arm_rate": 0.9019933333333332
+    }
+  ],
+  "sensitivity": [
+    {
+      "parameter": "horizon",
+      "value": 5000,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 54.980624999999264,
+      "conversion_rate": 0.169525,
+      "optimal_arm_rate": 0.8188
+    },
+    {
+      "parameter": "horizon",
+      "value": 10000,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 64.18562499999875,
+      "conversion_rate": 0.1738,
+      "optimal_arm_rate": 0.8922125
+    },
+    {
+      "parameter": "horizon",
+      "value": 20000,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 72.77374999999833,
+      "conversion_rate": 0.17659375,
+      "optimal_arm_rate": 0.9385
+    },
+    {
+      "parameter": "mean_delay",
+      "value": 0.0,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 54.980624999999264,
+      "conversion_rate": 0.169525,
+      "optimal_arm_rate": 0.8188
+    },
+    {
+      "parameter": "mean_delay",
+      "value": 200.0,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 51.751874999999146,
+      "conversion_rate": 0.1695,
+      "optimal_arm_rate": 0.83725
+    },
+    {
+      "parameter": "mean_delay",
+      "value": 500.0,
+      "policy": "Thompson Sampling",
+      "final_regret_mean": 60.812499999998934,
+      "conversion_rate": 0.1712,
+      "optimal_arm_rate": 0.829
+    },
+    {
+      "parameter": "ts_prior",
+      "value": "Beta(1,1)",
+      "policy": "Thompson Sampling Beta(1,1)",
+      "final_regret_mean": 54.980624999999264,
+      "conversion_rate": 0.169525,
+      "optimal_arm_rate": 0.8188
+    },
+    {
+      "parameter": "ts_prior",
+      "value": "Beta(2,2)",
+      "policy": "Thompson Sampling Beta(2,2)",
+      "final_regret_mean": 57.43499999999868,
+      "conversion_rate": 0.1686,
+      "optimal_arm_rate": 0.797075
+    },
+    {
+      "parameter": "ucb_c",
+      "value": 0.5,
+      "policy": "UCB1 (c=0.5)",
+      "final_regret_mean": 105.60374999999667,
+      "conversion_rate": 0.157075,
+      "optimal_arm_rate": 0.6693
+    },
+    {
+      "parameter": "ucb_c",
+      "value": 1.0,
+      "policy": "UCB1 (Nilos-UCB)",
+      "final_regret_mean": 188.79437499999096,
+      "conversion_rate": 0.1411,
+      "optimal_arm_rate": 0.4521
+    },
+    {
+      "parameter": "ucb_c",
+      "value": 2.0,
+      "policy": "UCB1 (c=2.0)",
+      "final_regret_mean": 261.29249999998643,
+      "conversion_rate": 0.12695,
+      "optimal_arm_rate": 0.3209
+    }
+  ],
+  "fairness": [
+    {
+      "segmento": "segment_age_band",
+      "n_grupos": 6,
+      "max_min_ratio_otimo": 1.257,
+      "std_exposicao_otimo": 0.0299
+    },
+    {
+      "segmento": "segment_history",
+      "n_grupos": 2,
+      "max_min_ratio_otimo": 1.028,
+      "std_exposicao_otimo": 0.005
+    },
+    {
+      "segmento": "segment_macro_regime",
+      "n_grupos": 3,
+      "max_min_ratio_otimo": 1.043,
+      "std_exposicao_otimo": 0.0055
+    }
+  ],
+  "environment": {
+    "arm_ids": [
+      "arm_consultative_call",
+      "arm_control",
+      "arm_digital_bundle",
+      "arm_rate_boost",
+      "arm_retention_plus"
+    ],
+    "true_p": [
+      0.145,
+      0.04,
+      0.10999999999999999,
+      0.18,
+      0.075
+    ]
+  }
+}

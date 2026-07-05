@@ -34,22 +34,29 @@ datathon-7mlet-grupo-87/
 │   ├── kaggle/
 │   │   ├── README.md            # fonte, link, versão, licença, limitações, download
 │   │   └── raw/                 # CSV bruto (NÃO versionado — baixado via script)
-│   └── processed/
-│       ├── bank_marketing.parquet  # base tratada, sem vazamento (versionada)
-│       └── metadata.json           # proveniência + resumo do processamento
+│   ├── processed/
+│   │   ├── bank_marketing.parquet  # base tratada, sem vazamento (versionada)
+│   │   └── metadata.json           # proveniência + resumo do processamento
+│   ├── synthetic_enrichment/    # camada sintética (Etapa 2)
+│   └── golden_set/              # golden set de avaliação offline (Etapa 4)
 ├── notebooks/
 │   ├── 01_eda.ipynb             # EDA executada (Etapa 1)
 │   ├── 02_enriquecimento_sintetico.ipynb  # camada sintética (Etapa 2)
-│   └── 03_baseline_bandit.ipynb # baseline x bandit (Etapa 3)
+│   ├── 03_baseline_bandit.ipynb # baseline x bandit (Etapa 3)
+│   └── 04_avaliacao_offline.ipynb # avaliação offline + golden set (Etapa 4)
 ├── reports/
 │   ├── data-dictionary.md       # dicionário de dados
 │   ├── data-quality.md          # relatório de qualidade (gerado)
+│   ├── data-generation.md       # processo, sementes, hipóteses e riscos
 │   ├── bandit-comparison.md     # comparação baseline x bandit (gerado)
 │   ├── bandit-metrics.json      # métricas do experimento (gerado)
-│   └── figures/                 # figuras da EDA e do bandit
+│   ├── offline-evaluation.md    # avaliação offline + golden set (gerado)
+│   ├── offline-metrics.json     # métricas da Etapa 4 (gerado)
+│   └── figures/                 # figuras da EDA, bandit e avaliação offline
 ├── src/
 │   ├── data/                    # camada de dados (download, load, processamento, qualidade)
-│   └── bandits/                 # políticas, ambiente, simulação e experimento (Etapa 3)
+│   ├── bandits/                 # políticas, ambiente, simulação e experimento (Etapa 3)
+│   └── evaluation/              # golden set, fairness e avaliação offline (Etapa 4)
 ├── tests/                       # testes de validação (camada de dados e bandits)
 ├── PLANEJAMENTO.md              # plano das 9 etapas (0–8)
 ├── pyproject.toml               # dependências e configuração (Poetry)
@@ -74,10 +81,13 @@ poetry run python -m src.data.prepare
 # 4. Experimento da Etapa 3 (baseline x bandit -> relatório + figuras)
 poetry run python -m src.bandits.experiment
 
-# 5. (Opcional) reexecutar os notebooks
+# 5. Avaliação offline da Etapa 4 (golden set + métricas + fairness)
+poetry run python -m src.evaluation
+
+# 6. (Opcional) reexecutar os notebooks
 poetry run jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb
 
-# 6. Testes de validação
+# 7. Testes de validação
 poetry run pytest -q
 ```
 
@@ -90,7 +100,8 @@ poetry run pytest -q
 | `poetry run python -m src.data.download [--source uci\|kaggle] [--force]` | Só baixa a base bruta. |
 | `poetry run python -m src.data.build_processed` | Gera `data/processed/` sem vazamento. |
 | `poetry run python -m src.bandits.experiment [--horizon N --seeds N]` | **Etapa 3:** compara baseline x bandit e gera relatório/figuras. |
-| `poetry run pytest -q` | Roda os testes de validação (dados e bandits). |
+| `poetry run python -m src.evaluation [--horizon N --seeds N]` | **Etapa 4:** avalia golden set, sensibilidade, fairness e gera relatório. |
+| `poetry run pytest -q` | Roda os testes de validação (dados, bandits e avaliação). |
 | `poetry run ruff check src/` | Lint do código-fonte. |
 
 ## Etapas do projeto
@@ -112,7 +123,13 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Comparação (gerada): [`reports/bandit-comparison.md`](reports/bandit-comparison.md)
   - Notebook: [`notebooks/03_baseline_bandit.ipynb`](notebooks/03_baseline_bandit.ipynb)
   - Código (políticas/ambiente/simulação): [`src/bandits/`](src/bandits/)
-- **Etapas 4–8** — planejadas (ver `PLANEJAMENTO.md`).
+- **Etapa 4 — Avaliação offline e golden set** ✅
+  - Golden set: [`data/golden_set/evaluation_cases.jsonl`](data/golden_set/evaluation_cases.jsonl) (24 casos)
+  - Documentação: [`data/golden_set/README.md`](data/golden_set/README.md)
+  - Relatório (gerado): [`reports/offline-evaluation.md`](reports/offline-evaluation.md)
+  - Notebook: [`notebooks/04_avaliacao_offline.ipynb`](notebooks/04_avaliacao_offline.ipynb)
+  - Código: [`src/evaluation/`](src/evaluation/)
+- **Etapas 5–8** — planejadas (ver `PLANEJAMENTO.md`).
 
 ## Limitações conhecidas
 
