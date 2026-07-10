@@ -51,6 +51,7 @@ data/kaggle/*
 
 # Logs
 *.log
+logs/
 
 # Figuras: ignora PNG soltos, mas versiona as figuras dos relatorios.
 *.png

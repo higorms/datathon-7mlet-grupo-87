@@ -56,8 +56,11 @@ datathon-7mlet-grupo-87/
 ├── src/
 │   ├── data/                    # camada de dados (download, load, processamento, qualidade)
 │   ├── bandits/                 # políticas, ambiente, simulação e experimento (Etapa 3)
-│   └── evaluation/              # golden set, fairness e avaliação offline (Etapa 4)
-├── tests/                       # testes de validação (camada de dados e bandits)
+│   ├── evaluation/              # golden set, fairness e avaliação offline (Etapa 4)
+│   └── service/                 # API FastAPI + CLI de decisão auditável (Etapa 5)
+├── scripts/                     # run_pipeline.py (pipeline ponta a ponta)
+├── docs/                        # planos e documentação de arquitetura
+├── tests/                       # testes de validação (dados, bandits, avaliação, serviço)
 ├── PLANEJAMENTO.md              # plano das 9 etapas (0–8)
 ├── pyproject.toml               # dependências e configuração (Poetry)
 └── .env.example                 # variáveis de ambiente (credencial Kaggle opcional)
@@ -82,13 +85,32 @@ poetry run python -m src.data.prepare
 poetry run python -m src.bandits.experiment
 
 # 5. Avaliação offline da Etapa 4 (golden set + métricas + fairness)
-poetry run python -m src.evaluation
+poetry run python -m src.evaluation --horizon 10000 --seeds 15
 
-# 6. (Opcional) reexecutar os notebooks
+# 6. Serviço de decisão da Etapa 5 (API auditável)
+poetry run uvicorn src.service.app:app --reload   # http://127.0.0.1:8000/docs
+# ...ou uma decisão one-shot pela CLI:
+poetry run python -m src.service.cli --context '{"age": 22, "contact": "cellular"}'
+# ...ou o pipeline ponta a ponta:
+poetry run python scripts/run_pipeline.py
+
+# 7. (Opcional) reexecutar os notebooks
 poetry run jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb
 
-# 7. Testes de validação
+# 8. Testes de validação
 poetry run pytest -q
+```
+
+### Exemplo de chamada à API
+
+```bash
+curl -X POST http://127.0.0.1:8000/decide -H "Content-Type: application/json" \
+  -d '{"age": 22, "contact": "cellular", "poutcome": "success", "month": "oct"}'
+# -> { "arm_id": "arm_rate_boost", "reason_codes": ["GREEDY_CONTEXT_MATCH"],
+#      "policy_version": "context-greedy-v1", "decision_id": "…", ... }
+
+# Entrada inválida (age < 18) retorna HTTP 422 com detalhe do erro.
+# Recuperar o registro auditável:  GET /audit/{decision_id}
 ```
 
 ## Lista de comandos
@@ -101,7 +123,10 @@ poetry run pytest -q
 | `poetry run python -m src.data.build_processed` | Gera `data/processed/` sem vazamento. |
 | `poetry run python -m src.bandits.experiment [--horizon N --seeds N]` | **Etapa 3:** compara baseline x bandit e gera relatório/figuras. |
 | `poetry run python -m src.evaluation [--horizon N --seeds N]` | **Etapa 4:** avalia golden set, sensibilidade, fairness e gera relatório. |
-| `poetry run pytest -q` | Roda os testes de validação (dados, bandits e avaliação). |
+| `poetry run uvicorn src.service.app:app --reload` | **Etapa 5:** sobe a API de decisão (`/decide`, `/health`, `/audit/{id}`, `/docs`). |
+| `poetry run python -m src.service.cli --context '{...}'` | **Etapa 5:** decisão one-shot pela CLI (sem servidor). |
+| `poetry run python scripts/run_pipeline.py` | **Etapa 5:** pipeline ponta a ponta (dados → decisão auditável). |
+| `poetry run pytest -q` | Roda os testes de validação (dados, bandits, avaliação e serviço). |
 | `poetry run ruff check src/` | Lint do código-fonte. |
 
 ## Etapas do projeto
@@ -129,7 +154,12 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Relatório (gerado): [`reports/offline-evaluation.md`](reports/offline-evaluation.md)
   - Notebook: [`notebooks/04_avaliacao_offline.ipynb`](notebooks/04_avaliacao_offline.ipynb)
   - Código: [`src/evaluation/`](src/evaluation/)
-- **Etapas 5–8** — planejadas (ver `PLANEJAMENTO.md`).
+- **Etapa 5 — Serviço/API demonstrável** ✅
+  - API + CLI: [`src/service/`](src/service/) (`POST /decide`, `/health`, `/audit/{id}`, `/docs`)
+  - Contrato, reason codes, log auditável e `policy_version`
+  - Pipeline ponta a ponta: [`scripts/run_pipeline.py`](scripts/run_pipeline.py)
+  - Plano: [`docs/etapa-5-plan.md`](docs/etapa-5-plan.md)
+- **Etapas 6–8** — planejadas (ver `PLANEJAMENTO.md`).
 
 ## Limitações conhecidas
 
