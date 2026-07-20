@@ -92,6 +92,11 @@ Log da recompensa final atrasada.
 5. Gerar recompensas intermediarias e recompensas finais atrasadas.
 6. Persistir os artefatos em `data/synthetic_enrichment/`.
 
+## Documentos de politica (RAG — Etapa 6)
+
+Politicas sinteticas em [`policy_docs/`](policy_docs/) para o assistente com LLM
+(Azure OpenAI + AI Search). Ver [`policy_docs/README.md`](policy_docs/README.md).
+
 ## Observacoes
 
 - Nao ha copia do CSV bruto do Kaggle nesta pasta.

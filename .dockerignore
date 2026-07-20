@@ -1,0 +1,21 @@
+# Docker
+
+Arquivos ignorados pelo `.dockerignore` na raiz do projeto.
+
+.git
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.ipynb_checkpoints
+.env
+logs/
+*.log
+notebooks/
+reports/figures/
+tests/
+Datathon.pdf
+PLANEJAMENTO.md
+docs/

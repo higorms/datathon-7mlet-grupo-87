@@ -1,29 +1,36 @@
-"""Pipeline ponta a ponta local (Etapa 5).
+"""Pipeline ponta a ponta local (Etapas 1-5).
 
-Reproduz a cadeia da solucao em um comando: garante os dados processados (Etapa 1),
-confirma a camada sintetica (Etapa 2) e demonstra o servico de decisao (Etapa 5) com
-dois exemplos (caso tipico e trilho de seguranca), gravando a auditoria.
+Reproduz a cadeia da solucao em um comando:
+  1. Garante dados processados (Etapa 1)
+  2. Confirma camada sintetica (Etapa 2)
+  3. Avaliacao offline rapida do golden set (Etapa 4)
+  4. Demonstra o servico de decisao com auditoria (Etapa 5)
 
 Uso:
     poetry run python scripts/run_pipeline.py
+    poetry run python scripts/run_pipeline.py --full-evaluation   # matriz bandit completa
+
 Depois, para subir a API:
     poetry run uvicorn src.service.app:app --reload
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import logging
+import subprocess
 import sys
 from pathlib import Path
 
-# Permite rodar como script solto (`python scripts/run_pipeline.py`): garante a raiz no path.
 _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from src.bandits.environment import SYNTH_DIR  # noqa: E402
 from src.data.build_processed import load_processed  # noqa: E402
+from src.evaluation.evaluator import evaluate_golden_set  # noqa: E402
+from src.evaluation.golden_set import DEFAULT_GOLDEN_SET_PATH, load_golden_cases  # noqa: E402
 from src.service.contracts import DecisionRequest  # noqa: E402
 from src.service.decision import make_decision  # noqa: E402
 
@@ -48,12 +55,33 @@ DEMOS = [
 ]
 
 
+def _run_full_evaluation() -> None:
+    """Executa a CLI completa da Etapa 4 (matriz bandit + sensibilidade + fairness)."""
+    cmd = [
+        sys.executable, "-m", "src.evaluation",
+        "--horizon", "5000",
+        "--seeds", "5",
+        "--sensitivity-horizon", "2000",
+        "--sensitivity-seeds", "3",
+    ]
+    log.info("      executando: %s", " ".join(cmd))
+    subprocess.run(cmd, check=True, cwd=_ROOT)
+
+
 def main() -> None:
-    log.info("[1/3] Garantindo dados processados (Etapa 1)...")
+    parser = argparse.ArgumentParser(description="Pipeline ponta a ponta local (Etapas 1-5).")
+    parser.add_argument(
+        "--full-evaluation",
+        action="store_true",
+        help="Roda avaliacao offline completa (matriz bandit + relatorio). Padrao: so golden set.",
+    )
+    args = parser.parse_args()
+
+    log.info("[1/4] Garantindo dados processados (Etapa 1)...")
     df = load_processed()
     log.info("      processado: %d linhas x %d colunas", df.shape[0], df.shape[1])
 
-    log.info("[2/3] Conferindo camada sintetica (Etapa 2)...")
+    log.info("[2/4] Conferindo camada sintetica (Etapa 2)...")
     catalog = SYNTH_DIR / "offer_catalog.parquet"
     if not catalog.exists():
         raise FileNotFoundError(
@@ -61,7 +89,23 @@ def main() -> None:
         )
     log.info("      catalogo presente: %s", catalog.name)
 
-    log.info("[3/3] Demonstrando o servico de decisao (Etapa 5)...")
+    log.info("[3/4] Avaliacao offline (Etapa 4)...")
+    if args.full_evaluation:
+        _run_full_evaluation()
+    else:
+        cases = load_golden_cases(DEFAULT_GOLDEN_SET_PATH)
+        golden = evaluate_golden_set(cases)
+        log.info(
+            "      golden set: %d casos, pass rate=%.1f%%",
+            len(golden.results),
+            golden.pass_rate * 100,
+        )
+        if golden.failures:
+            for failure in golden.failures:
+                log.warning("      FALHA %s: %s", failure.case.case_id, failure.failure_reason)
+            raise SystemExit(1)
+
+    log.info("[4/4] Demonstrando o servico de decisao (Etapa 5)...")
     for title, ctx in DEMOS:
         resp = make_decision(DecisionRequest(**ctx))
         print(f"\n>>> {title}")
