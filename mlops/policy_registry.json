@@ -1,0 +1,29 @@
+{
+  "policies": {
+    "context-greedy-v1": {
+      "version": "context-greedy-v1",
+      "created_at": "2026-01-01T00:00:00+00:00",
+      "history": [
+        {
+          "ts": "2026-01-01T00:00:00+00:00",
+          "event": "register",
+          "to_stage": "prod",
+          "actor": "seed"
+        }
+      ],
+      "stage": "prod",
+      "metrics": {
+        "golden_pass_rate": 1.0,
+        "fallback_rate": 0.25,
+        "regret": 56.6,
+        "optimal_arm_rate": 0.94
+      },
+      "description": "Politica contextual gulosa + trilhos de seguranca (servida na Etapa 5)."
+    }
+  },
+  "active": {
+    "dev": null,
+    "staging": null,
+    "prod": "context-greedy-v1"
+  }
+}

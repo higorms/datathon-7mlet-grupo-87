@@ -53,6 +53,10 @@ data/kaggle/*
 *.log
 logs/
 
+# MLflow (rastreio de experimentos - runtime, nao versionar)
+mlruns/
+mlartifacts/
+
 # Figuras: ignora PNG soltos, mas versiona as figuras dos relatorios.
 *.png
 !reports/figures/**
@@ -64,3 +68,5 @@ models/*.joblib
 # Sistema
 .DS_Store
 Thumbs.db
+# Enunciado do desafio (material do curso, nao versionar)
+Datathon*.pdf
