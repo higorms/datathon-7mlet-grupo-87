@@ -11,8 +11,8 @@
 
 | Integrante | Conta GitHub | Status |
 |------------|--------------|--------|
-| Higor Menezes | `higorms` | Etapas 0, 2, 4 e 6 ✅ concluídas |
-| Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1, 3, 5 e 7 ✅ concluídas |
+| Higor Menezes | `higorms` | Etapas 0, 2, 4, 6 e 8 ✅ concluídas |
+| Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1, 3, 5, 7 e 8 ✅ concluídas |
 
 **Critério de avaliação oficial (Fase 05):**
 
@@ -100,12 +100,19 @@
 - [x] Procedimento de teste + aprovação humana estruturada + promoção controlada
 - [x] Código: [`src/mlops/`](src/mlops/) · Doc: [`docs/mlops-lifecycle.md`](docs/mlops-lifecycle.md) · CLI: `python -m src.mlops`
 
-#### Etapa 8 — Governança, Demo Day e relatórios
-- `docs/model-card.md`, `docs/system-card.md`, `docs/lgpd-plan.md`
-- Relatório técnico (≤10 páginas)
-- Pitch (≤10 min + 5 min de perguntas) com slides versionados
-- FinOps (ROI, custo por serviço Azure, TCO), justificativa de arquitetura, cenários de escala
-- (Desejável / pontos extras) demonstração ao vivo ou gravada com plano de contingência
+#### Etapa 8 — Governança, Demo Day e relatórios ✅ (Higor + Narcélio)
+- [x] `docs/model-card.md` (nome, versão, métricas, intended use, out-of-scope, fairness, vieses, limitações)
+- [x] `docs/system-card.md` (escopo, fluxo, guardrails, 4 cenários de risco, monitoramento)
+- [x] `docs/lgpd-plan.md` (base legal, minimização, retenção, identificadores, logs, incidentes)
+- [x] Relatório técnico (≤10 páginas): [`reports/technical-report.md`](reports/technical-report.md)
+- [x] Pitch (≤10 min + 5 min perguntas): [`docs/pitch/slides.md`](docs/pitch/slides.md) + [`docs/pitch/roteiro.md`](docs/pitch/roteiro.md)
+- [x] FinOps (ROI, custo por serviço Azure, TCO) no pitch
+- [x] Justificativa de arquitetura com diagrama, fronteiras e alternativas descartadas no pitch
+- [x] Cenários de escala e redução no pitch
+- [x] Plano de revisão periódica do model card e system card (responsáveis + cadência)
+- [x] Plano de demonstração com contingência: [`docs/demo-plan.md`](docs/demo-plan.md)
+- [ ] Gravação de demo (ação humana — template em [`docs/pitch/demo-recording.md`](docs/pitch/demo-recording.md))
+- [x] Testes de governança: [`tests/test_governance_docs.py`](tests/test_governance_docs.py)
 
 ---
 

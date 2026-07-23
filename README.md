@@ -52,6 +52,7 @@ datathon-7mlet-grupo-87/
 │   ├── bandit-metrics.json      # métricas do experimento (gerado)
 │   ├── offline-evaluation.md    # avaliação offline + golden set (gerado)
 │   ├── offline-metrics.json     # métricas da Etapa 4 (gerado)
+│   ├── technical-report.md      # relatório técnico (Etapa 8)
 │   └── figures/                 # figuras da EDA, bandit e avaliação offline
 ├── src/
 │   ├── data/                    # camada de dados (download, load, processamento, qualidade)
@@ -64,6 +65,11 @@ datathon-7mlet-grupo-87/
 ├── docs/                        # planos e documentação de arquitetura
 │   ├── architecture-azure.md    # arquitetura-alvo Azure (Etapa 6)
 │   ├── mlops-lifecycle.md       # ciclo de vida MLOps (Etapa 7)
+│   ├── model-card.md            # governança do modelo (Etapa 8)
+│   ├── system-card.md           # governança do sistema (Etapa 8)
+│   ├── lgpd-plan.md             # plano LGPD (Etapa 8)
+│   ├── demo-plan.md             # plano de demonstração (Etapa 8)
+│   ├── pitch/                   # slides e roteiro do Demo Day (Etapa 8)
 │   └── etapa-5-plan.md
 ├── Dockerfile                   # imagem do serviço de decisão (Etapa 6)
 ├── tests/                       # testes de validação (dados, bandits, avaliação, serviço, mlops)
@@ -181,7 +187,14 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Código: [`src/mlops/`](src/mlops/) (registro, approval gate, MLflow, drift/recompensa)
   - Registro de políticas: [`mlops/policy_registry.json`](mlops/policy_registry.json)
   - Demo: `poetry run python -m src.mlops --candidate context-greedy-v2-rc --approve --demo-rollback`
-- **Etapa 8** — planejada (ver `PLANEJAMENTO.md`).
+- **Etapa 8 — Governança, Demo Day e relatórios** ✅
+  - Model card: [`docs/model-card.md`](docs/model-card.md)
+  - System card: [`docs/system-card.md`](docs/system-card.md)
+  - Plano LGPD: [`docs/lgpd-plan.md`](docs/lgpd-plan.md)
+  - Relatório técnico: [`reports/technical-report.md`](reports/technical-report.md)
+  - Pitch (slides): [`docs/pitch/slides.md`](docs/pitch/slides.md) · Roteiro: [`docs/pitch/roteiro.md`](docs/pitch/roteiro.md)
+  - Plano de demo: [`docs/demo-plan.md`](docs/demo-plan.md)
+  - Exportar slides para PDF: `npx @marp-team/marp-cli docs/pitch/slides.md --pdf -o docs/pitch/slides.pdf`
 
 ## Arquitetura Azure (Etapa 6)
 
