@@ -11,7 +11,7 @@
 
 | Integrante | Conta GitHub | Status |
 |------------|--------------|--------|
-| Higor Menezes | `higorms` | Etapas 0, 2 e 4 ✅ concluídas |
+| Higor Menezes | `higorms` | Etapas 0, 2, 4 e 6 ✅ concluídas |
 | Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1, 3 e 5 ✅ concluídas |
 
 **Critério de avaliação oficial (Fase 05):**
@@ -49,51 +49,49 @@
 - [x] `pyproject.toml` (deps, versão de Python, ferramentas dev)
 - [x] `.env.example` (variáveis necessárias, sem valores reais)
 - [x] Licença (MIT) e `.gitignore`
-- [ ] **README.md completo** (visão do problema, escopo, escolhas de design, execução local, mapa de pastas, comandos, limitações) → *atualmente quase vazio; precisa ser complementado*
+- [x] **README.md completo** (visão do problema, escopo, escolhas de design, execução local, mapa de pastas, comandos, limitações)
 - [x] Histórico de commits que mostre evolução
 
-> 📌 **Pendências da Etapa 0 a alinhar com o Higor:** README ainda mínimo e `.gitignore`
-> ignora toda a pasta `data/`, o que impede versionar artefatos exigidos a partir da
-> Etapa 1 (ver ajuste na Etapa 1 abaixo).
+#### Etapa 1 — Base Kaggle e EDA ✅ (Narcélio)
+- [x] `data/kaggle/README.md` (link, versão, fonte, licença, limitações, instruções de download)
+- [x] Dicionário de dados, notebook de EDA e relatório de qualidade
+- [x] Camada de dados em código que carrega a base, registra fonte/versão/licença e gera os datasets derivados
+- [x] Decisão documentada sobre colunas com vazamento temporal/pós-contato (ex.: `duration`)
 
-#### Etapa 1 — Base Kaggle e EDA 🔜
-- `data/kaggle/README.md` (link, versão, fonte, licença, limitações, instruções de download)
-- Dicionário de dados, notebook de EDA e relatório de qualidade
-- Camada de dados em código que carrega a base, registra fonte/versão/licença e gera os datasets derivados
-- Decisão documentada sobre colunas com vazamento temporal/pós-contato (ex.: `duration`)
+#### Etapa 2 — Enriquecimento sintético ✅ (Higor)
+- [x] `data/synthetic_enrichment/` com `offer_catalog`, `offer_events`, `delayed_rewards`
+- [x] Catálogo de braços/ofertas **separado fisicamente** da base Kaggle
+- [x] Eventos de impressão, contexto de decisão e recompensas com **sementes controladas**
+- [x] Modelagem de delayed rewards e horizonte temporal documentada + schema descrito
 
-#### Etapa 2 — Enriquecimento sintético
-- `data/synthetic_enrichment/` com `offer_catalog`, `offer_events`, `delayed_rewards`
-- Catálogo de braços/ofertas **separado fisicamente** da base Kaggle
-- Eventos de impressão, contexto de decisão e recompensas com **sementes controladas**
-- Modelagem de delayed rewards e horizonte temporal documentada + schema descrito
+#### Etapa 3 — Baseline e estratégia algorítmica ✅ (Narcélio)
+- [x] ≥1 baseline determinístico (regra fixa / melhor braço histórico / segmentação)
+- [x] Implementação/simulação de **Thompson Sampling** (priors documentados)
+- [x] Referência/justificativa de **Nilos-UCB** (família UCB) na análise
+- [x] Métricas: recompensa, **regret**, exploração, conversão simulada
+- [x] Tratamento de **cold-start** e **delayed rewards**
 
-#### Etapa 3 — Baseline e estratégia algorítmica
-- ≥1 baseline determinístico (regra fixa / melhor braço histórico / segmentação)
-- Implementação/simulação de **Thompson Sampling** (priors documentados)
-- Referência/justificativa de **Nilos-UCB** (família UCB) na análise
-- Métricas: recompensa, **regret**, exploração, conversão simulada
-- Tratamento de **cold-start** e **delayed rewards**
+#### Etapa 4 — Avaliação offline e golden set ✅ (Higor)
+- [x] Script/notebook de avaliação offline **reproduzível** por CLI/notebook
+- [x] `data/golden_set/evaluation_cases.jsonl` com **≥20 casos** versionados (24 casos)
+- [x] Cobertura: casos típicos, borda, segmentos elegíveis, cenários adversariais
+- [x] Cada caso: contexto, ação esperada, recompensa esperada, justificativa, critério pass/fail
+- [x] Matriz de métricas, análise de sensibilidade e **fairness de exposição** entre segmentos
 
-#### Etapa 4 — Avaliação offline e golden set
-- Script/notebook de avaliação offline **reproduzível** por CLI/notebook
-- `data/golden_set/evaluation_cases.jsonl` com **≥20 casos** versionados
-- Cobertura: casos típicos, borda, segmentos elegíveis, cenários adversariais
-- Cada caso: contexto, ação esperada, recompensa esperada, justificativa, critério pass/fail
-- Matriz de métricas, análise de sensibilidade e **fairness de exposição** entre segmentos
+#### Etapa 5 — Serviço ou interface demonstrável ✅ (Narcélio)
+- [x] API / CLI / notebook executável que recebe contexto → devolve decisão
+- [x] Contrato de entrada/saída documentado, com exemplo e tratamento de erro
+- [x] **Log auditável** com reason codes, braço selecionado e versão da política
+- [x] Comando único para reproduzir o pipeline ponta a ponta local (`scripts/run_pipeline.py`)
+- [x] Suíte mínima de testes (contratos de dados, política, registro de decisão)
 
-#### Etapa 5 — Serviço ou interface demonstrável
-- API / CLI / notebook executável que recebe contexto → devolve decisão
-- Contrato de entrada/saída documentado, com exemplo e tratamento de erro
-- **Log auditável** com reason codes, braço selecionado e versão da política
-- Comando único para reproduzir o pipeline ponta a ponta local
-- Suíte mínima de testes (contratos de dados, política, registro de decisão)
-
-#### Etapa 6 — Arquitetura-alvo Azure
-- `docs/architecture-azure.md` com **diagrama Mermaid** e mapeamento de serviços Azure
-- Plano de deploy + estimativa qualitativa de custo
-- Camadas: compute, API, dados, IA/RAG, observabilidade, segurança, identidade, governança
-- Gestão de segredos com **Azure Key Vault** e **Managed Identity** (somente Azure)
+#### Etapa 6 — Arquitetura-alvo Azure ✅ (Higor)
+- [x] `docs/architecture-azure.md` com **diagrama Mermaid** e mapeamento de serviços Azure
+- [x] Plano de deploy + estimativa qualitativa de custo
+- [x] Camadas: compute, API, dados, IA/RAG, observabilidade, segurança, identidade, governança
+- [x] Gestão de segredos com **Azure Key Vault** e **Managed Identity** (somente Azure)
+- [x] `data/synthetic_enrichment/policy_docs/` — corpus sintético para RAG
+- [x] `Dockerfile` — imagem containerizável do serviço FastAPI
 
 #### Etapa 7 — Ciclo de vida MLOps
 - Plano de retreino: critérios de promoção, **approval gate**, rollback, versionamento de política

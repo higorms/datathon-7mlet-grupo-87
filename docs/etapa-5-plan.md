@@ -112,10 +112,11 @@ Os códigos derivam **exatamente** dos trilhos de segurança já implementados e
 
 ## 8. Comando único ponta a ponta
 
-`scripts/run_pipeline.py` executa em sequência: (1) `src.data.prepare`, (2) checa/gera a
-camada sintética, (3) `src.evaluation` (golden set + métricas) e (4) sobe o serviço
-(`uvicorn`). Documentado no README. Alternativa sem servidor:
-`python -m src.service.cli --context '{...}'` imprime a decisão + grava auditoria.
+`scripts/run_pipeline.py` executa em sequência: (1) dados processados (Etapa 1),
+(2) checa camada sintética (Etapa 2), (3) avaliação do golden set (Etapa 4) e
+(4) demonstra decisões auditáveis (Etapa 5). Flag `--full-evaluation` roda a
+avaliação offline completa. Documentado no README. Para subir o servidor:
+`poetry run uvicorn src.service.app:app --reload`
 
 ## 9. Testes mínimos (`tests/test_service.py`)
 
@@ -137,11 +138,11 @@ Usar `fastapi.testclient.TestClient` (sem subir servidor real).
 
 ## 11. Checklist de aceite da Etapa 5
 
-- [ ] `POST /decide` recebe contexto e devolve braço + reason codes + versão + `decision_id`
-- [ ] Contrato de entrada/saída documentado (Pydantic + `/docs`) com exemplo e erro 422
-- [ ] Log auditável JSONL com reason codes, braço e `policy_version`
-- [ ] `GET /audit/{decision_id}` recupera o registro
-- [ ] CLI one-shot e script de pipeline ponta a ponta
-- [ ] `tests/test_service.py` cobrindo contrato, política e auditoria (verde)
-- [ ] README atualizado (como subir o serviço, exemplo de chamada, tratamento de erro)
-- [ ] `.gitignore` ignora `logs/`; ruff limpo
+- [x] `POST /decide` recebe contexto e devolve braço + reason codes + versão + `decision_id`
+- [x] Contrato de entrada/saída documentado (Pydantic + `/docs`) com exemplo e erro 422
+- [x] Log auditável JSONL com reason codes, braço e `policy_version`
+- [x] `GET /audit/{decision_id}` recupera o registro
+- [x] CLI one-shot e script de pipeline ponta a ponta
+- [x] `tests/test_service.py` cobrindo contrato, política e auditoria (verde)
+- [x] README atualizado (como subir o serviço, exemplo de chamada, tratamento de erro)
+- [x] `.gitignore` ignora `logs/`; ruff limpo

@@ -37,7 +37,7 @@ datathon-7mlet-grupo-87/
 │   ├── processed/
 │   │   ├── bank_marketing.parquet  # base tratada, sem vazamento (versionada)
 │   │   └── metadata.json           # proveniência + resumo do processamento
-│   ├── synthetic_enrichment/    # camada sintética (Etapa 2)
+│   ├── synthetic_enrichment/    # camada sintética (Etapa 2) + policy_docs (RAG)
 │   └── golden_set/              # golden set de avaliação offline (Etapa 4)
 ├── notebooks/
 │   ├── 01_eda.ipynb             # EDA executada (Etapa 1)
@@ -60,6 +60,9 @@ datathon-7mlet-grupo-87/
 │   └── service/                 # API FastAPI + CLI de decisão auditável (Etapa 5)
 ├── scripts/                     # run_pipeline.py (pipeline ponta a ponta)
 ├── docs/                        # planos e documentação de arquitetura
+│   ├── architecture-azure.md    # arquitetura-alvo Azure (Etapa 6)
+│   └── etapa-5-plan.md
+├── Dockerfile                   # imagem do serviço de decisão (Etapa 6)
 ├── tests/                       # testes de validação (dados, bandits, avaliação, serviço)
 ├── PLANEJAMENTO.md              # plano das 9 etapas (0–8)
 ├── pyproject.toml               # dependências e configuração (Poetry)
@@ -99,6 +102,10 @@ poetry run jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.
 
 # 8. Testes de validação
 poetry run pytest -q
+
+# 9. Container do serviço (Etapa 6)
+docker build -t datathon-decision-api .
+docker run -p 8000:8000 datathon-decision-api
 ```
 
 ### Exemplo de chamada à API
@@ -125,7 +132,9 @@ curl -X POST http://127.0.0.1:8000/decide -H "Content-Type: application/json" \
 | `poetry run python -m src.evaluation [--horizon N --seeds N]` | **Etapa 4:** avalia golden set, sensibilidade, fairness e gera relatório. |
 | `poetry run uvicorn src.service.app:app --reload` | **Etapa 5:** sobe a API de decisão (`/decide`, `/health`, `/audit/{id}`, `/docs`). |
 | `poetry run python -m src.service.cli --context '{...}'` | **Etapa 5:** decisão one-shot pela CLI (sem servidor). |
-| `poetry run python scripts/run_pipeline.py` | **Etapa 5:** pipeline ponta a ponta (dados → decisão auditável). |
+| `poetry run python scripts/run_pipeline.py` | **Etapas 1–5:** pipeline ponta a ponta (dados → golden set → decisão auditável). |
+| `poetry run python scripts/run_pipeline.py --full-evaluation` | Pipeline + avaliação offline completa (matriz bandit). |
+| `docker build -t datathon-decision-api .` | **Etapa 6:** build da imagem do serviço FastAPI. |
 | `poetry run pytest -q` | Roda os testes de validação (dados, bandits, avaliação e serviço). |
 | `poetry run ruff check src/` | Lint do código-fonte. |
 
@@ -159,7 +168,22 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Contrato, reason codes, log auditável e `policy_version`
   - Pipeline ponta a ponta: [`scripts/run_pipeline.py`](scripts/run_pipeline.py)
   - Plano: [`docs/etapa-5-plan.md`](docs/etapa-5-plan.md)
-- **Etapas 6–8** — planejadas (ver `PLANEJAMENTO.md`).
+- **Etapa 6 — Arquitetura-alvo Azure** ✅
+  - Documentação: [`docs/architecture-azure.md`](docs/architecture-azure.md)
+  - Políticas RAG sintéticas: [`data/synthetic_enrichment/policy_docs/`](data/synthetic_enrichment/policy_docs/)
+  - Container: [`Dockerfile`](Dockerfile) (FastAPI → Azure Container Apps)
+- **Etapas 7–8** — planejadas (ver `PLANEJAMENTO.md`).
+
+## Arquitetura Azure (Etapa 6)
+
+A solução local (FastAPI + parquet + golden set) mapeia para **Azure Container Apps**,
+**API Management**, **ADLS Gen2**, **Azure OpenAI + AI Search** (RAG sobre políticas
+sintéticas), **Key Vault** e **Managed Identity**.
+
+Documentação completa: [`docs/architecture-azure.md`](docs/architecture-azure.md).
+
+**Decisão de compute:** Container Apps como primário; AKS como evolução de escala
+(>100k req/dia, múltiplos microserviços) — justificativa no doc.
 
 ## Limitações conhecidas
 
