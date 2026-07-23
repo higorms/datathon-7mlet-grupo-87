@@ -57,13 +57,16 @@ datathon-7mlet-grupo-87/
 │   ├── data/                    # camada de dados (download, load, processamento, qualidade)
 │   ├── bandits/                 # políticas, ambiente, simulação e experimento (Etapa 3)
 │   ├── evaluation/              # golden set, fairness e avaliação offline (Etapa 4)
-│   └── service/                 # API FastAPI + CLI de decisão auditável (Etapa 5)
+│   ├── service/                 # API FastAPI + CLI de decisão auditável (Etapa 5)
+│   └── mlops/                   # registro, gate, MLflow e monitoramento (Etapa 7)
+├── mlops/                       # policy_registry.json (registro de políticas versionado)
 ├── scripts/                     # run_pipeline.py (pipeline ponta a ponta)
 ├── docs/                        # planos e documentação de arquitetura
 │   ├── architecture-azure.md    # arquitetura-alvo Azure (Etapa 6)
+│   ├── mlops-lifecycle.md       # ciclo de vida MLOps (Etapa 7)
 │   └── etapa-5-plan.md
 ├── Dockerfile                   # imagem do serviço de decisão (Etapa 6)
-├── tests/                       # testes de validação (dados, bandits, avaliação, serviço)
+├── tests/                       # testes de validação (dados, bandits, avaliação, serviço, mlops)
 ├── PLANEJAMENTO.md              # plano das 9 etapas (0–8)
 ├── pyproject.toml               # dependências e configuração (Poetry)
 └── .env.example                 # variáveis de ambiente (credencial Kaggle opcional)
@@ -135,7 +138,8 @@ curl -X POST http://127.0.0.1:8000/decide -H "Content-Type: application/json" \
 | `poetry run python scripts/run_pipeline.py` | **Etapas 1–5:** pipeline ponta a ponta (dados → golden set → decisão auditável). |
 | `poetry run python scripts/run_pipeline.py --full-evaluation` | Pipeline + avaliação offline completa (matriz bandit). |
 | `docker build -t datathon-decision-api .` | **Etapa 6:** build da imagem do serviço FastAPI. |
-| `poetry run pytest -q` | Roda os testes de validação (dados, bandits, avaliação e serviço). |
+| `poetry run python -m src.mlops --candidate <v> --approve [--demo-rollback]` | **Etapa 7:** ciclo MLOps (gate, aprovação, promoção, rollback). |
+| `poetry run pytest -q` | Roda os testes de validação (dados, bandits, avaliação, serviço e mlops). |
 | `poetry run ruff check src/` | Lint do código-fonte. |
 
 ## Etapas do projeto
@@ -172,7 +176,12 @@ Plano completo das 9 etapas em [`PLANEJAMENTO.md`](PLANEJAMENTO.md).
   - Documentação: [`docs/architecture-azure.md`](docs/architecture-azure.md)
   - Políticas RAG sintéticas: [`data/synthetic_enrichment/policy_docs/`](data/synthetic_enrichment/policy_docs/)
   - Container: [`Dockerfile`](Dockerfile) (FastAPI → Azure Container Apps)
-- **Etapas 7–8** — planejadas (ver `PLANEJAMENTO.md`).
+- **Etapa 7 — Ciclo de vida MLOps** ✅
+  - Doc: [`docs/mlops-lifecycle.md`](docs/mlops-lifecycle.md)
+  - Código: [`src/mlops/`](src/mlops/) (registro, approval gate, MLflow, drift/recompensa)
+  - Registro de políticas: [`mlops/policy_registry.json`](mlops/policy_registry.json)
+  - Demo: `poetry run python -m src.mlops --candidate context-greedy-v2-rc --approve --demo-rollback`
+- **Etapa 8** — planejada (ver `PLANEJAMENTO.md`).
 
 ## Arquitetura Azure (Etapa 6)
 

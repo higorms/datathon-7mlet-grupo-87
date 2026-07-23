@@ -12,7 +12,7 @@
 | Integrante | Conta GitHub | Status |
 |------------|--------------|--------|
 | Higor Menezes | `higorms` | Etapas 0, 2, 4 e 6 ✅ concluídas |
-| Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1, 3 e 5 ✅ concluídas |
+| Narcélio | `narcelio1989` (`nfilho1989`) | Etapas 1, 3, 5 e 7 ✅ concluídas |
 
 **Critério de avaliação oficial (Fase 05):**
 
@@ -93,11 +93,12 @@
 - [x] `data/synthetic_enrichment/policy_docs/` — corpus sintético para RAG
 - [x] `Dockerfile` — imagem containerizável do serviço FastAPI
 
-#### Etapa 7 — Ciclo de vida MLOps
-- Plano de retreino: critérios de promoção, **approval gate**, rollback, versionamento de política
-- Monitoramento de **drift** e de recompensa
-- Rastreio de experimentos em **MLflow** (ou equivalente)
-- Procedimento de teste + aprovação humana estruturada + promoção controlada
+#### Etapa 7 — Ciclo de vida MLOps ✅ (Narcélio)
+- [x] Plano de retreino: critérios de promoção, **approval gate**, rollback, versionamento de política
+- [x] Monitoramento de **drift** (PSI) e de recompensa
+- [x] Rastreio de experimentos em **MLflow**
+- [x] Procedimento de teste + aprovação humana estruturada + promoção controlada
+- [x] Código: [`src/mlops/`](src/mlops/) · Doc: [`docs/mlops-lifecycle.md`](docs/mlops-lifecycle.md) · CLI: `python -m src.mlops`
 
 #### Etapa 8 — Governança, Demo Day e relatórios
 - `docs/model-card.md`, `docs/system-card.md`, `docs/lgpd-plan.md`

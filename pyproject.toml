@@ -28,6 +28,11 @@ dependencies = [
 # Os modulos sao executados via `poetry run python -m src.data.<modulo>`.
 package-mode = false
 
+# Grupo MLOps (Etapa 7): fora do `main` de proposito, para NAO entrar na imagem Docker
+# do servico (`poetry install --only main`). Instalado no ambiente local por padrao.
+[tool.poetry.group.mlops.dependencies]
+mlflow = ">=2.11,<3.0"
+
 [tool.poetry.group.dev.dependencies]
 jupyter = ">=1.0"
 notebook = ">=7.0"
